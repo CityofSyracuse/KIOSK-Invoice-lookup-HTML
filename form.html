@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>City Payment Center • Tax Statements</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: '#002756' }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css">
+  <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+  <div class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
+      <button onclick="history.back()" class="absolute left-4 top-4 sm:top-1/2 sm:-translate-y-1/2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg border border-gray-300 transition text-sm">
+        ← Back
+      </button>
+      <a href="/" class="absolute right-4 top-4 sm:top-1/2 sm:-translate-y-1/2 px-4 py-2 bg-brand text-white rounded-lg hover:opacity-90 transition text-sm">
+        🏠 Home
+      </a>
+      <h2 class="text-center text-xl font-semibold text-gray-800">Property Tax Statement Lookup</h2>
+    </div>
+  </div>
+  <!-- Form Section -->
+  <div class="max-w-2xl mx-auto p-4">
+    <div class="bg-white p-6 rounded-xl shadow-md">
+      <form id="taxForm" class="space-y-4">
+        <div class="relative">
+          <label for="account" class="block text-gray-700 font-semibold mb-3 text-lg">Account Number <span class="text-red-500">*</span></label>
+          <input type="text" id="account" name="account" required 
+                 class="w-full border border-gray-300 rounded p-3"
+                 placeholder="Enter Account Number" />
+          <!-- Suggestions dropdown -->
+          <ul id="suggestions" class="absolute left-0 right-0 bg-white border border-gray-300 mt-1 rounded-md shadow-lg max-h-60 overflow-y-auto z-10 hidden"></ul>
+        </div>
+       
+        <div>
+          <label for="year" class="block text-gray-700 font-semibold mb-3 text-lg">Year</label>
+          <select id="year" name="year" class="w-full border border-gray-300 rounded p-3">
+           
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025" selected>2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
+            <option value="2031">2031</option>
+            <option value="2032">2032</option>
+            <option value="2033">2033</option>
+            <option value="2034">2034</option>
+          </select>
+        </div>
+        <button type="submit" class="w-full bg-brand text-white py-2 rounded-lg font-medium hover:opacity-90 transition">Search</button>
+      </form>
+
+
+      <button type="button" id="toggleKeyboard" class="mt-4 text-sm text-blue-600 underline">Show Keyboard</button> 
+
+
+    </div>
+  </div>
+  <!-- Modal for Tax Statement -->
+  <div id="modal" class="fixed inset-0 z-50 hidden bg-black/75">
+    <div class="relative w-full h-full">
+      <div class="absolute inset-4 bg-white rounded-xl shadow-xl flex flex-col overflow-hidden">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-3 border-b">
+          <button id="modalClose" class="px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg border border-gray-300 transition text-sm">
+            ← Back
+          </button>
+          <h3 class="font-semibold">Tax Statement</h3>
+          <button id="goHome" class="px-4 py-2 bg-brand text-white rounded-lg hover:opacity-90 transition text-sm">
+            🏠 Home
+          </button>
+        </div>
+        <!-- Modal Content (iframe) -->
+        <div class="relative flex-1">
+          <div id="modalLoader" class="absolute inset-0 flex items-center justify-center bg-white/75">
+            <div class="w-10 h-10 border-4 border-gray-200 border-t-gray-800 rounded-full animate-spin"></div>
+          </div>
+          <iframe id="modalFrame" title="Tax Statements" class="w-full h-full border-0"></iframe>
+        </div>
+        <!-- simple-keyboard class -->
+        <!-- <div id="keyboardContainer" class="mt-4 hidden simple-keyboard"></div> -->
+
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      let csvData = [];
+      // Parse CSV data for suggestions
+      Papa.parse("CSV/Data.csv", {
+        download: true,
+        quoteChar: "'",
+        delimiter: ",",
+        skipEmptyLines: true,
+        complete: function(results) {
+          const rows = results.data;
+          const data = [];
+          for (const row of rows) {
+            if (!row || row.length === 0) continue;
+            // Ensure necessary fields exist
+            if (!row[20]) continue;
+            const account = row[20].trim();
+            const addressParts = [];
+            if (row[11]) addressParts.push(row[11].trim());
+            if (row[12]) addressParts.push(row[12].trim());
+            if (row[13]) addressParts.push(row[13].trim());
+            const address = addressParts.filter(Boolean).join(' ');
+            const name = row[47] ? row[47].trim() : '';
+            data.push({ name, address, account });
+          }
+          // Remove duplicate entries (same name+address+account)
+          const seen = new Set();
+          csvData = data.filter(row => {
+            const key = `${row.name}|${row.address}|${row.account}`;
+            if (seen.has(key)) {
+              return false;
+            }
+            seen.add(key);
+            return true;
+          });
+        }
+      });
+
+      const accountInput = document.getElementById('account');
+      const yearSelect = document.getElementById('year');
+      const suggestionsUL = document.getElementById('suggestions');
+      const form = document.getElementById('taxForm');
+      const modal = document.getElementById('modal');
+      const frame = document.getElementById('modalFrame');
+      const loader = document.getElementById('modalLoader');
+
+      // Filter and display suggestions as user types
+      accountInput.addEventListener('input', () => {
+        const query = accountInput.value.trim().toLowerCase();
+        suggestionsUL.innerHTML = "";
+        if (!query) {
+          suggestionsUL.classList.add('hidden');
+          return;
+        }
+        let count = 0;
+        for (const row of csvData) {
+          const textToSearch = (row.name + " " + row.address + " " + row.account).toLowerCase();
+          if (textToSearch.includes(query)) {
+            // Create suggestion list item
+            const li = document.createElement('li');
+            li.textContent = row.address + (row.name ? " - " + row.name : "");
+            li.className = "px-2 py-1 cursor-pointer hover:bg-blue-100";
+            li.dataset.account = row.account;
+            li.addEventListener('click', () => {
+              accountInput.value = row.account;
+              suggestionsUL.classList.add('hidden');
+            });
+            suggestionsUL.appendChild(li);
+            count++;
+            if (count >= 10) break; // limit to 10 suggestions
+          }
+        }
+        if (count > 0) {
+          suggestionsUL.classList.remove('hidden');
+        } else {
+          suggestionsUL.classList.add('hidden');
+        }
+      });
+      // Hide suggestions when input loses focus (with slight delay to allow clicks)
+      accountInput.addEventListener('blur', () => {
+        setTimeout(() => { suggestionsUL.classList.add('hidden'); }, 100);
+      });
+
+      // On form submit: open the tax statements modal
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const account = accountInput.value.trim();
+        if (!account) return; // required field check
+        let year = yearSelect.value;
+        if (!year) {
+          year = new Date().getFullYear().toString();
+        }
+        const url = `https://syracuse.go2gov.net/faces/statements?type=cityschool&account=${account}&year=${year}`;
+        // Show modal with the statements page
+        loader.classList.remove('hidden');
+        frame.src = url;
+        modal.classList.remove('hidden');
+        // Clear the form fields for next use
+        accountInput.value = "";
+        yearSelect.value = "2025";
+        suggestionsUL.classList.add('hidden');
+      });
+
+      // Modal iframe load event (hide loader when content is loaded)
+      frame.addEventListener('load', () => {
+        loader.classList.add('hidden');
+      });
+      // Modal Back button
+      document.getElementById('modalClose').addEventListener('click', () => {
+        frame.src = 'about:blank';
+        modal.classList.add('hidden');
+      });
+      // Modal Home button
+      document.getElementById('goHome').addEventListener('click', () => {
+        window.location.href = "/";
+      });
+
+      // On-screen keyboard setup
+        let activeInput = null;
+
+        // Get the class from the CDN global
+        const KeyboardClass = window.SimpleKeyboard?.default || window.SimpleKeyboard;
+        if (!KeyboardClass) {
+        console.error("simple-keyboard failed to load");
+        return;
+        }
+
+        // Mount into #keyboardContainer (so it doesn't rely on .simple-keyboard)
+        const keyboard = new KeyboardClass({
+        rootElement: document.getElementById("keyboardContainer"),
+        theme: "hg-theme-default hg-layout-default",
+        display: { "{bksp}": "⌫", "{space}": "Space", "{enter}": "Enter" },
+        onChange: val => {
+            if (activeInput) {
+            activeInput.value = val;
+            activeInput.dispatchEvent(new Event("input"));
+            }
+        },
+        onKeyPress: key => {
+            if (key === "{enter}") form.requestSubmit();
+        }
+        });
+
+        // Focus binding (simple-keyboard works with text inputs, not <select>)
+        accountInput.addEventListener("focus", () => {
+        activeInput = accountInput;
+        keyboard.setOptions({ inputName: accountInput.id });
+        keyboard.setInput(accountInput.value || "");
+        });
+        accountInput.addEventListener("input", () => {
+        if (activeInput === accountInput) keyboard.setInput(accountInput.value, accountInput.id);
+        });
+
+      // Toggle keyboard visibility
+      const toggleBtn = document.getElementById('toggleKeyboard');
+      const keyboardContainer = document.getElementById('keyboardContainer'); 
+      toggleBtn.addEventListener('click', () => {
+        if (keyboardContainer.classList.contains('hidden')) {
+          // Show keyboard
+          if (!document.activeElement || (document.activeElement !== accountInput && document.activeElement !== yearSelect)) {
+            accountInput.focus();
+          }
+          keyboardContainer.classList.remove('hidden');
+          toggleBtn.textContent = "Hide Keyboard";
+        } else {
+          // Hide keyboard
+          keyboardContainer.classList.add('hidden');
+          toggleBtn.textContent = "Show Keyboard";
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

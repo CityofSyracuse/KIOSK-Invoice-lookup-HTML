@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>City of Syracuse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: '#002756' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-white p-4 md:p-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">City of Syracuse</h1>
+      <p class="text-gray-600 text-lg">Select a service to get started.</p>
+    </div>
+ 
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4 max-w-2xl mx-auto">
+    <!-- Taxes -->
+      <button data-action="taxes" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 gap-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-opacity-90" href="./form.html" >
+        <img src="/ImagesAssets/taxes.png" alt="Taxes" class="w-16 h-16 mb-2" />
+        <h3 class="text-brand font-semibold text-lg sm:text-xl text-center px-2 sm:px-4">Taxes</h3>
+      </button>
+      <!-- School Bus Violations-->
+      <button data-action="school-bus" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 gap-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-opacity-90">
+        <img src="/ImagesAssets/schoolBus.png" alt="School Bus Violations" class="w-16 h-16 mb-2" />
+        <h3 class="text-brand font-semibold text-lg sm:text-xl text-center px-2 sm:px-4">School Bus Violations</h3>
+      </button>
+      <!-- Parking Ticket -->
+      <button data-action="parking" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 gap-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-opacity-90">
+        <img src="/ImagesAssets/carImage.png" alt="Parking Ticket" class="w-16 h-16 mb-2" />
+        <h3 class="text-brand font-semibold text-lg sm:text-xl text-center px-2 sm:px-4">Parking Ticket</h3>
+      </button>
+      <!-- Health and Sanitation -->
+      <button data-action="health" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 gap-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-opacity-90">
+        <img src="/ImagesAssets/health.png" alt="Health and Sanitation" class="w-16 h-16 mb-2" />
+        <h3 class="text-brand font-semibold text-lg sm:text-xl text-center px-2 sm:px-4">Health and Sanitation</h3>
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal for School Bus Violations -->
+  <div id="modal" class="fixed inset-0 z-50 hidden bg-black/75">
+    <div class="relative w-full h-full">
+      <div class="absolute inset-4 bg-white rounded-xl shadow-xl flex flex-col overflow-hidden">
+       
+        <div class="flex items-center justify-between p-3 border-b">
+          <button id="modalClose" class="px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg border border-gray-300 transition text-sm">
+            ← Back
+          </button>
+          <h3 class="font-semibold">School Bus Violations</h3>
+          <button id="goHome" class="px-4 py-2 bg-brand text-white rounded-lg hover:opacity-90 transition text-sm">
+            🏠 Home
+          </button>
+        </div>
+      
+        <div class="relative flex-1">
+          <div id="modalLoader" class="absolute inset-0 flex items-center justify-center bg-white/75">
+            <div class="w-10 h-10 border-4 border-gray-200 border-t-gray-800 rounded-full animate-spin"></div>
+          </div>
+          <iframe id="modalFrame" title="Service Portal" class="w-full h-full border-0"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const modal = document.getElementById('modal');
+      const frame = document.getElementById('modalFrame');
+      const loader = document.getElementById('modalLoader');
+      // Open modal with given URL
+      function openModal(url) {
+        loader.classList.remove('hidden');
+        frame.src = url;
+        modal.classList.remove('hidden');
+      }
+      // Hide loader when iframe finishes loading
+      frame.addEventListener('load', () => {
+        loader.classList.add('hidden');
+      });
+      // Button actions
+      document.querySelector('[data-action="taxes"]').addEventListener('click', () => {
+        window.location.href = "form.html";
+      });
+      document.querySelector('[data-action="school-bus"]').addEventListener('click', () => {
+        openModal('https://www.trafficsafetycitations.com/pages/login');
+      });
+      document.querySelector('[data-action="parking"]').addEventListener('click', () => {
+        window.location.href = "https://mvb.syr.gov/tickets/?cmd=search";
+      });
+      document.querySelector('[data-action="health"]').addEventListener('click', () => {
+        window.location.href = "https://mvb.syr.gov/tickets/?cmd=search&show=sov";
+      });
+      // Modal Back button
+      document.getElementById('modalClose').addEventListener('click', () => {
+        frame.src = 'about:blank';
+        modal.classList.add('hidden');
+      });
+      // Modal Home button
+      document.getElementById('goHome').addEventListener('click', () => {
+        window.location.href = "/";
+      });
+    })();
+  </script>
+</body>
+</html>
