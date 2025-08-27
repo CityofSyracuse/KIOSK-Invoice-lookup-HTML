@@ -19,6 +19,14 @@
   <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.js"></script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+  <!-- Header (City logo) added -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-4xl mx-auto p-4 text-center">
+      <a href="/" class="inline-block">
+        <img src="/ImagesAssets/cityLogo.png" alt="City of Syracuse Logo" class="h-10 inline-block" />
+      </a>
+    </div>
+  </header>
   <div class="bg-white shadow-sm border-b border-gray-200">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative">
       <button onclick="history.back()" class="absolute left-4 top-4 sm:top-1/2 sm:-translate-y-1/2 px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg border border-gray-300 transition text-sm">
@@ -42,11 +50,9 @@
           <!-- Suggestions dropdown -->
           <ul id="suggestions" class="absolute left-0 right-0 bg-white border border-gray-300 mt-1 rounded-md shadow-lg max-h-60 overflow-y-auto z-10 hidden"></ul>
         </div>
-       
         <div>
           <label for="year" class="block text-gray-700 font-semibold mb-3 text-lg">Year</label>
           <select id="year" name="year" class="w-full border border-gray-300 rounded p-3">
-           
             <option value="2020">2020</option>
             <option value="2021">2021</option>
             <option value="2022">2022</option>
@@ -67,10 +73,7 @@
         <button type="submit" class="w-full bg-brand text-white py-2 rounded-lg font-medium hover:opacity-90 transition">Search</button>
       </form>
 
-
       <button type="button" id="toggleKeyboard" class="mt-4 text-sm text-blue-600 underline">Show Keyboard</button> 
-
-
     </div>
   </div>
   <!-- Modal for Tax Statement -->
@@ -96,7 +99,6 @@
         </div>
         <!-- simple-keyboard class -->
         <!-- <div id="keyboardContainer" class="mt-4 hidden simple-keyboard"></div> -->
-
       </div>
     </div>
   </div>
@@ -178,7 +180,7 @@
           suggestionsUL.classList.add('hidden');
         }
       });
-      // Hide suggestions when input loses focus (with slight delay to allow clicks)
+      // Hide suggestions when input loses focus (slight delay to allow clicks)
       accountInput.addEventListener('blur', () => {
         setTimeout(() => { suggestionsUL.classList.add('hidden'); }, 100);
       });
@@ -217,41 +219,38 @@
         window.location.href = "/";
       });
 
-      // On-screen keyboard setup
-        let activeInput = null;
-
-        // Get the class from the CDN global
-        const KeyboardClass = window.SimpleKeyboard?.default || window.SimpleKeyboard;
-        if (!KeyboardClass) {
+      // On-screen keyboard setup (no changes made here)
+      let activeInput = null;
+      const KeyboardClass = window.SimpleKeyboard?.default || window.SimpleKeyboard;
+      if (!KeyboardClass) {
         console.error("simple-keyboard failed to load");
         return;
-        }
-
-        // Mount into #keyboardContainer (so it doesn't rely on .simple-keyboard)
-        const keyboard = new KeyboardClass({
+      }
+      const keyboard = new KeyboardClass({
         rootElement: document.getElementById("keyboardContainer"),
         theme: "hg-theme-default hg-layout-default",
         display: { "{bksp}": "⌫", "{space}": "Space", "{enter}": "Enter" },
         onChange: val => {
-            if (activeInput) {
+          if (activeInput) {
             activeInput.value = val;
             activeInput.dispatchEvent(new Event("input"));
-            }
+          }
         },
         onKeyPress: key => {
-            if (key === "{enter}") form.requestSubmit();
+          if (key === "{enter}") form.requestSubmit();
         }
-        });
-
-        // Focus binding (simple-keyboard works with text inputs, not <select>)
-        accountInput.addEventListener("focus", () => {
+      });
+      // Focus binding for on-screen keyboard
+      accountInput.addEventListener("focus", () => {
         activeInput = accountInput;
         keyboard.setOptions({ inputName: accountInput.id });
         keyboard.setInput(accountInput.value || "");
-        });
-        accountInput.addEventListener("input", () => {
-        if (activeInput === accountInput) keyboard.setInput(accountInput.value, accountInput.id);
-        });
+      });
+      accountInput.addEventListener("input", () => {
+        if (activeInput === accountInput) {
+          keyboard.setInput(accountInput.value, accountInput.id);
+        }
+      });
 
       // Toggle keyboard visibility
       const toggleBtn = document.getElementById('toggleKeyboard');
@@ -272,5 +271,13 @@
       });
     })();
   </script>
+  <!-- Footer (City logo) added -->
+  <footer class="bg-white border-t border-gray-200 py-4 mt-8">
+    <div class="max-w-4xl mx-auto text-center">
+      <a href="/" class="inline-block">
+        <img src="/ImagesAssets/cityLogo.png" alt="City of Syracuse Logo" class="h-8" />
+      </a>
+    </div>
+  </footer>
 </body>
 </html>
