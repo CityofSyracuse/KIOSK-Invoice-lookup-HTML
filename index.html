@@ -25,59 +25,65 @@
       <nav aria-label="Primary">
         <ul class="flex items-center gap-4 text-lg">
           <li><a href="index.html" class="hover:underline">Home</a></li>
-          <!-- <li><a href="#" class="hover:underline">Contact</a></li> -->
         </ul>
       </nav>
     </div>
   </header>
 
-  <div class="max-w-4xl mx-auto">
+  <!-- FIX: match content width to header/footer (max-w-2xl) for uniform alignment -->
+  <div class="max-w-2xl mx-auto">
     <div class="text-center my-6">
-  <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-brand">
-    Select a service to get started
-  </h2>
- 
-</div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4 max-w-2xl mx-auto">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-brand">
+        Select a service to get started
+      </h2>
+    </div>
+    <!-- FIX: revert grid to 2/3/3 columns (what you had before) for consistent tile layout -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
       <!-- Taxes (hidden for now) -->
       <button data-action="taxes" class="hidden bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/taxes.png" alt="Taxes" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Taxes</h3>
       </button>
+
       <!-- School Zone Traffic Enforcement -->
       <button
-    data-action="school-bus"
-    class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 gap-2 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg"
-  >
-    <img src="./ImagesAssets/schoolBus.png" alt="School Bus Violations" class="w-16 h-16 mb-2" />
-    <h3 class="text-brand font-semibold text-lg text-center">School Zone Traffic Enforcement Lookup</h3>
-  </button>
+        data-action="school-bus"
+        class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 gap-2 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg"
+      >
+        <img src="./ImagesAssets/schoolBus.png" alt="School Zone Violations" class="w-16 h-16 mb-2" />
+        <h3 class="text-brand font-semibold text-lg text-center">School Zone Traffic Enforcement Lookup</h3>
+      </button>
 
       <!-- Parking Ticket -->
       <button data-action="parking" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/carImage.png" alt="Parking Ticket" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Parking Ticket Lookup</h3>
       </button>
+
       <!-- Health and Sanitation -->
       <button data-action="health" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/health.png" alt="Health and Sanitation" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Health and Sanitation Lookup</h3>
       </button>
+
+      <!-- Board of Assessment Appeals (BAA) -->
+      <button data-action="baa" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
+        <img src="./ImagesAssets/taxes.png" alt="Board of Assessment Appeals (BAA)" class="w-16 h-16 mb-2" />
+        <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Contact Bureau of Administrative Adjudication (BAA)</h3>
+      </button>
     </div>
   </div>
 
+  <!-- Dispute section commented per direction (go through lookup first) -->
+  <!--
   <section class="max-w-2xl mx-auto mt-6 space-y-2" aria-label="Dispute options">
-  <p class="text-center text-sm text-gray-700">
-    Need to dispute a ticket?
-  </p>
-  <a
-    href="https://us.openforms.com/Form/f36438c9-85f3-44b3-ab4b-1fa98751ef1f"
-    target="_blank" rel="noopener"
-    class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-brand text-white py-3 px-4 shadow hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand"
-  >
-    <span class="font-semibold">Dispute School Zone Ticket</span>
-  </a>
-</section>
+    <p class="text-center text-sm text-gray-700">Need to dispute a ticket?</p>
+    <a href="https://us.openforms.com/Form/f36438c9-85f3-44b3-ab4b-1fa98751ef1f" target="_blank" rel="noopener"
+       class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-brand text-white py-3 px-4 shadow hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand">
+      <span class="font-semibold">Dispute School Zone Ticket</span>
+    </a>
+  </section>
+  -->
 
   <!-- Modal (shared for all services) -->
   <div id="modal" class="fixed inset-0 z-50 hidden bg-black/75">
@@ -104,8 +110,7 @@
     </div>
   </div>
 
-  <!-- Footer -->
-   <footer class="bg-slate-50 border-t mt-10">
+  <footer class="bg-slate-50 border-t mt-10">
     <div class="max-w-2xl mx-auto px-4 py-10">
       <div class="grid gap-8 md:grid-cols-3 items-start">
         <div class="flex justify-center">
@@ -114,20 +119,15 @@
         <div>
           <h3 class="font-semibold text-gray-800 mb-2">Contact Us</h3>
           <p>City Hall<br>233 East Washington Street<br>Syracuse, NY 13202</p>
-          <!-- <p class="mt-2">Phone: (315) 448-8005</p>
-          <p>Hours: 8:00 am – 4:30 pm, Mon – Fri</p> -->
         </div>
-
         <div>
           <h3 class="font-semibold text-gray-800 mb-2">Connect with Us</h3>
           <ul class="flex flex-wrap gap-x-4 gap-y-2">
-           
             <li><a href="http://twitter.com/syracuse1848" class="hover:underline">Twitter</a></li>
             <li><a href="http://youtube.com/cityofsyracuse" class="hover:underline">YouTube</a></li>
           </ul>
         </div>
       </div>
-
       <p class="mt-8 text-center text-xs text-gray-500">&copy; <span id="year"></span> City of Syracuse</p>
     </div>
   </footer>
@@ -154,32 +154,47 @@
 
       // Button event handlers
       document.querySelector('[data-action="taxes"]').addEventListener('click', () => {
-        // Taxes: simply navigate to form page (since it's same-origin, presumably form.html exists)
         window.location.href = "form.html";
       });
       document.querySelector('[data-action="school-bus"]').addEventListener('click', () => {
-        // School Bus Violations: open external page in modal (this site allows framing)
         openModal('https://www.trafficsafetycitations.com/pages/login', 'School Bus Violations');
       });
+      // FIX: point Parking/Health directly to MVB in the modal (post-embed fix)
       document.querySelector('[data-action="parking"]').addEventListener('click', () => {
-        // Parking Ticket: open local page (parking.html) in modal
-        openModal('parking.html', 'Parking Ticket');
+        openModal('https://mvb.syr.gov/tickets/?cmd=search', 'Parking Ticket');
       });
       document.querySelector('[data-action="health"]').addEventListener('click', () => {
-        // Health & Sanitation: open local page (health.html) in modal
-        openModal('health.html', 'Health and Sanitation');
+        openModal('https://mvb.syr.gov/tickets/?cmd=search&show=sov', 'Health and Sanitation');
+      });
+      // BAA in modal (OpenForms link you specified)
+      document.querySelector('[data-action="baa"]').addEventListener('click', () => {
+        openModal('https://us.openforms.com/Form/3de93ae4-c48d-4bf6-8655-39ad33d698e5', 'Bureau of Administrative Adjudication (BAA)');
       });
 
       // Modal Back button – closes modal
       document.getElementById('modalClose').addEventListener('click', () => {
-        frame.src = 'about:blank';  // reset iframe
+        frame.src = 'about:blank';
         modal.classList.add('hidden');
       });
       // Modal Home button – goes back to home (reloads index)
       document.getElementById('goHome').addEventListener('click', () => {
         window.location.href = "index.html";
       });
+
+      // tiny util: set footer year
+      document.getElementById('year').textContent = new Date().getFullYear();
     })();
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
