@@ -1,7 +1,7 @@
 ﻿# KIOSK-Invoice-lookup
 
 This is a static kiosk app for the City Payment Center.  
-It runs on HTML/JS with Tailwind CSS. Hosted on Netlify @ https://thriving-twilight-394ec3.netlify.app/ 
+It runs on HTML/JS with Tailwind CSS. Hosted on Netlify @ https://cpcviolationlookup.netlify.app/ 
 
 ---
 
