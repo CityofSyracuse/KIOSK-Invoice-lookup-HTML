@@ -30,16 +30,13 @@
     </div>
   </header>
 
-  <!-- FIX: match content width to header/footer (max-w-2xl) for uniform alignment -->
   <div class="max-w-2xl mx-auto">
     <div class="text-center my-6">
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-brand">
         Select a service to get started
       </h2>
     </div>
-    <!-- FIX: revert grid to 2/3/3 columns (what you had before) for consistent tile layout -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
-      <!-- Taxes (hidden for now) -->
       <button data-action="taxes" class="hidden bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/taxes.png" alt="Taxes" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Taxes</h3>
@@ -55,15 +52,19 @@
       </button>
 
       <!-- Parking Ticket -->
-      <button data-action="parking" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
+      <button data-action="parking" class="hidden bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/carImage.png" alt="Parking Ticket" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Parking Ticket Lookup</h3>
       </button>
 
       <!-- Health and Sanitation -->
-      <button data-action="health" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
+      <button data-action="health" class="hidden bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/health.png" alt="Health and Sanitation" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Health and Sanitation Lookup</h3>
+      </button>
+       <button data-action="dispute" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
+        <img src="./ImagesAssets/health.png" alt="Health and Sanitation" class="w-16 h-16 mb-2" />
+        <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Dispute School Zone Ticket</h3>
       </button>
 
       <!-- Board of Assessment Appeals (BAA) -->
@@ -74,22 +75,19 @@
     </div>
   </div>
 
-  <!-- Dispute section commented per direction (go through lookup first) -->
-  <!--
-  <section class="max-w-2xl mx-auto mt-6 space-y-2" aria-label="Dispute options">
+  <!-- <section class="max-w-2xl mx-auto mt-6 space-y-2" aria-label="Dispute options">
     <p class="text-center text-sm text-gray-700">Need to dispute a ticket?</p>
     <a href="https://us.openforms.com/Form/f36438c9-85f3-44b3-ab4b-1fa98751ef1f" target="_blank" rel="noopener"
        class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-brand text-white py-3 px-4 shadow hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand">
       <span class="font-semibold">Dispute School Zone Ticket</span>
     </a>
-  </section>
-  -->
-
+  </section> -->
+ 
   <!-- Modal (shared for all services) -->
   <div id="modal" class="fixed inset-0 z-50 hidden bg-black/75">
     <div class="relative w-full h-full">
       <div class="absolute inset-4 bg-white rounded-xl shadow-xl flex flex-col overflow-hidden">
-        <!-- Modal Header -->
+        
         <div class="flex items-center justify-between p-3 border-b">
           <button id="modalClose" class="px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg border border-gray-300 text-sm">
             ← Back
@@ -99,7 +97,7 @@
             🏠 Home
           </button>
         </div>
-        <!-- Modal Content (iframe) -->
+    
         <div class="relative flex-1">
           <div id="modalLoader" class="absolute inset-0 flex items-center justify-center bg-white/75">
             <div class="w-10 h-10 border-4 border-gray-200 border-t-gray-800 rounded-full animate-spin"></div>
@@ -159,16 +157,19 @@
       document.querySelector('[data-action="school-bus"]').addEventListener('click', () => {
         openModal('https://www.trafficsafetycitations.com/pages/login', 'School Bus Violations');
       });
-      // FIX: point Parking/Health directly to MVB in the modal (post-embed fix)
+
       document.querySelector('[data-action="parking"]').addEventListener('click', () => {
         openModal('https://mvb.syr.gov/tickets/?cmd=search', 'Parking Ticket');
       });
       document.querySelector('[data-action="health"]').addEventListener('click', () => {
         openModal('https://mvb.syr.gov/tickets/?cmd=search&show=sov', 'Health and Sanitation');
       });
-      // BAA in modal (OpenForms link you specified)
+      // BAA in modal 
       document.querySelector('[data-action="baa"]').addEventListener('click', () => {
         openModal('https://us.openforms.com/Form/3de93ae4-c48d-4bf6-8655-39ad33d698e5', 'Bureau of Administrative Adjudication (BAA)');
+      });
+      document.querySelector('[data-action="dispute"]').addEventListener('click', () => {
+        openModal('https://us.openforms.com/Form/f36438c9-85f3-44b3-ab4b-1fa98751ef1f', 'Dispute School Zone Ticket');
       });
 
       // Modal Back button – closes modal
