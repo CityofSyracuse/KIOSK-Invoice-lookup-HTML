@@ -68,22 +68,14 @@
       </button>
 
       <!-- Board of Assessment Appeals (BAA) -->
-      <button data-action="baa" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
+      <button data-action="baa" class="hidden bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/taxes.png" alt="Board of Assessment Appeals (BAA)" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Contact Bureau of Administrative Adjudication (BAA)</h3>
       </button>
     </div>
   </div>
-
-  <!-- <section class="max-w-2xl mx-auto mt-6 space-y-2" aria-label="Dispute options">
-    <p class="text-center text-sm text-gray-700">Need to dispute a ticket?</p>
-    <a href="https://us.openforms.com/Form/f36438c9-85f3-44b3-ab4b-1fa98751ef1f" target="_blank" rel="noopener"
-       class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-brand text-white py-3 px-4 shadow hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand">
-      <span class="font-semibold">Dispute School Zone Ticket</span>
-    </a>
-  </section> -->
  
-  <!-- Modal (shared for all services) -->
+  <!-- Modals -->
   <div id="modal" class="fixed inset-0 z-50 hidden bg-black/75">
     <div class="relative w-full h-full">
       <div class="absolute inset-4 bg-white rounded-xl shadow-xl flex flex-col overflow-hidden">
@@ -182,7 +174,7 @@
         window.location.href = "index.html";
       });
 
-      // tiny util: set footer year
+      // set footer year
       document.getElementById('year').textContent = new Date().getFullYear();
     })();
   </script>
