@@ -62,24 +62,16 @@
         <img src="./ImagesAssets/health.png" alt="Health and Sanitation" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Health and Sanitation Lookup</h3>
       </button>
-       <button data-action="dispute" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
+
+      <button data-action="dispute" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/health.png" alt="Health and Sanitation" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Dispute School Zone Ticket</h3>
       </button>
 
-      <!-- Board of Assessment Appeals (BAA) -->
-      <button data-action="baa" class="hidden bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
-        <img src="./ImagesAssets/taxes.png" alt="Board of Assessment Appeals (BAA)" class="w-16 h-16 mb-2" />
-        <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Contact Bureau of Administrative Adjudication (BAA)</h3>
-      </button>
-    </div>
-  </div>
- 
   <!-- Modals -->
   <div id="modal" class="fixed inset-0 z-50 hidden bg-black/75">
     <div class="relative w-full h-full">
       <div class="absolute inset-4 bg-white rounded-xl shadow-xl flex flex-col overflow-hidden">
-        
         <div class="flex items-center justify-between p-3 border-b">
           <button id="modalClose" class="px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg border border-gray-300 text-sm">
             ← Back
@@ -89,7 +81,7 @@
             🏠 Home
           </button>
         </div>
-    
+        
         <div class="relative flex-1">
           <div id="modalLoader" class="absolute inset-0 flex items-center justify-center bg-white/75">
             <div class="w-10 h-10 border-4 border-gray-200 border-t-gray-800 rounded-full animate-spin"></div>
@@ -97,8 +89,24 @@
           <iframe id="modalFrame" title="Service Portal" class="w-full h-full border-0"></iframe>
         </div>
       </div>
+      <!-- Inactivity Overlay -->
+      <div id="inactivityPrompt" class="absolute inset-0 hidden flex items-center justify-center bg-black/50"> 
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center max-w-xs"> 
+          <p class="text-xl font-semibold mb-2 text-gray-800">Are you still there?</p> 
+          <p class="mb-4 text-gray-800">
+            Your session will expire in <span id="countdown">60</span> seconds.
+          </p> 
+          <button id="extendSessionBtn" class="px-4 py-2 bg-brand text-white rounded-lg hover:opacity-90 text-sm font-semibold">
+            Yes, extend time
+          </button>
+          <button id="endSessionBtn" class="mt-3 px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
+            End session now
+          </button> 
+        </div>
+      </div> 
     </div>
   </div>
+</div>
 
   <footer class="bg-slate-50 border-t mt-10">
     <div class="max-w-2xl mx-auto px-4 py-10">
@@ -129,18 +137,76 @@
       const loader = document.getElementById('modalLoader');
       const modalTitle = document.getElementById('modalTitle');
 
+      let inactivityTimeout, countdownInterval; // inactivity timer variables 
+      const inactivityPrompt = document.getElementById('inactivityPrompt'); 
+      const countdownElem = document.getElementById('countdown');          
+      const extendBtn = document.getElementById('extendSessionBtn');
+      const endBtn = document.getElementById('endSessionBtn'); 
+      
+      function endSession() {                                   
+        clearTimeout(inactivityTimeout);
+        clearInterval(countdownInterval);
+        inactivityPrompt.classList.add('hidden');
+        frame.src = 'about:blank';
+        modal.classList.add('hidden');
+        window.location.href = 'index.html';               
+      }
+
+      if (endBtn) endBtn.addEventListener('click', endSession); 
+
+      // 7-minute inactivity timer
+      function startInactivityTimer() {                            
+        clearTimeout(inactivityTimeout);                           
+        inactivityTimeout = setTimeout(showInactivityPrompt, 7 * 60 * 1000);
+      }                                                           
+
+      // Are you still there?"
+      function showInactivityPrompt() {
+        inactivityPrompt.classList.remove('hidden');
+        let count = 60;
+        countdownElem.textContent = count;
+        countdownInterval = setInterval(() => {
+          count--;
+          if (count <= 0) {
+            clearInterval(countdownInterval);
+            endSession();                                       
+          } else {
+            countdownElem.textContent = count;
+          }
+        }, 1000);
+      }                                                            
+    
+      // Click yes to extend
+      extendBtn.addEventListener('click', () => {                  
+        inactivityPrompt.classList.add('hidden');                  
+        clearInterval(countdownInterval);                          
+        startInactivityTimer();  
+                                          
+      });                                                          
+
       // Function to open modal with given URL (src) and title
       function openModal(url, title) {
         if (title) modalTitle.textContent = title;
         loader.classList.remove('hidden');
         frame.src = url;
         modal.classList.remove('hidden');
+        startInactivityTimer();
       }
 
       // Hide loader when iframe content has loaded
       frame.addEventListener('load', () => {
         loader.classList.add('hidden');
-      });
+        try { 
+          const w = frame.contentWindow; 
+          ['mousemove','keydown','click','scroll','touchstart'].forEach(evt => { 
+            w.addEventListener(evt, startInactivityTimer); 
+          }); 
+        } catch (e) { console.debug('[SessionTimer] iframer'); } 
+      }); 
+
+      ['mousemove','keydown','click','scroll','touchstart'].forEach(evt => { 
+        document.addEventListener(evt, startInactivityTimer);                
+      });                                                                     
 
       // Button event handlers
       document.querySelector('[data-action="taxes"]').addEventListener('click', () => {
@@ -151,43 +217,43 @@
       });
 
       document.querySelector('[data-action="parking"]').addEventListener('click', () => {
-        openModal('https://mvb.syr.gov/tickets/?cmd=search', 'Parking Ticket');
+        openModal('/mvb/tickets/?cmd=search', 'Parking Ticket');
       });
+
       document.querySelector('[data-action="health"]').addEventListener('click', () => {
-        openModal('https://mvb.syr.gov/tickets/?cmd=search&show=sov', 'Health and Sanitation');
+        openModal('/mvb/tickets/?cmd=search&show=sov', 'Health and Sanitation');
       });
+
       // BAA in modal 
-      document.querySelector('[data-action="baa"]').addEventListener('click', () => {
-        openModal('https://us.openforms.com/Form/3de93ae4-c48d-4bf6-8655-39ad33d698e5', 'Bureau of Administrative Adjudication (BAA)');
-      });
+      const baaBtn = document.querySelector('[data-action="baa"]');               
+      if (baaBtn) {                                                                 
+        baaBtn.addEventListener('click', () => {                                    
+          openModal('https://us.openforms.com/Form/3de93ae4-c48d-4bf6-8655-39ad33d698e5', 'Bureau of Administrative Adjudication (BAA)');
+        });                                                                         
+      }                         
+
       document.querySelector('[data-action="dispute"]').addEventListener('click', () => {
         openModal('https://us.openforms.com/Form/f36438c9-85f3-44b3-ab4b-1fa98751ef1f', 'Dispute School Zone Ticket');
       });
 
-      // Modal Back button – closes modal
       document.getElementById('modalClose').addEventListener('click', () => {
         frame.src = 'about:blank';
         modal.classList.add('hidden');
+        clearTimeout(inactivityTimeout);   
+        clearInterval(countdownInterval);  
+        inactivityPrompt.classList.add('hidden'); 
       });
-      // Modal Home button – goes back to home (reloads index)
+      
       document.getElementById('goHome').addEventListener('click', () => {
+        clearTimeout(inactivityTimeout);   // clear timers if returning home
+        clearInterval(countdownInterval);
         window.location.href = "index.html";
       });
 
       // set footer year
+
       document.getElementById('year').textContent = new Date().getFullYear();
     })();
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
