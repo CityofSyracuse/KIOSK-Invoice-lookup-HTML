@@ -12,17 +12,17 @@
 
   window.VARIANTS = {
     cpc: {
-      tiles: ["taxes", "schoolBus", "dispute"], // what to display
-      order: ["taxes", "schoolBus", "dispute", "parking", "health"], // tile order
+      tiles: ["taxes", "schoolBus", "dispute", "notify"], // what to display
+      order: ["taxes", "schoolBus", "dispute", "parking", "health", "notify"], // tile order
     },
 
     mvb: {
-      tiles: ["schoolBus", "dispute"],
-      order: ["schoolBus", "dispute", "parking", "health"],
+      tiles: ["schoolBus", "dispute", "notify"],
+      order: ["schoolBus", "dispute", "parking", "health", "notify"],
     },
     dev: {
-      tiles: ["taxes", "schoolBus", "dispute", "parking", "health"],
-      order: ["taxes", "schoolBus", "dispute", "parking", "health"],
+      tiles: ["taxes", "schoolBus", "dispute", "parking", "health", "notify"],
+      order: ["taxes", "schoolBus", "dispute", "parking", "health", "notify"],
     },
   };
 

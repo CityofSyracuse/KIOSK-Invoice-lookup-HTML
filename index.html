@@ -16,6 +16,10 @@
   </script>
   <script src="./config/site-map.js"></script>
   <script src="./config/variants.js"></script>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="SYR Kiosk">
+  <link rel="apple-touch-icon" sizes="180x180" href="/ImagesAssets/syracuse_logo.png">
 
 </head>
 <body class="min-h-screen bg-white">
@@ -69,6 +73,15 @@
       <button data-tile="dispute" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/health.png" alt="Health and Sanitation" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Dispute School Zone Ticket</h3>
+      </button>
+       <button
+        data-tile="notify"
+        class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg"
+      >
+        <img src="./ImagesAssets/subscribe.png" alt="Subscribe" class="w-16 h-16 mb-2" />
+        <h3 class="text-brand font-semibold text-lg text-center">
+          Subscribe to Property Notifications
+        </h3>
       </button>
 
   <!-- Modals -->
