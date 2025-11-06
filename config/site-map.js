@@ -34,5 +34,12 @@ window.SITE_MAP = {
       href: "/mvb/tickets/?cmd=search&show=sov",
       title: "Health and Sanitation",
     },
+    notify: {
+      label: "Subscribe to Property Notifications",
+      icon: "./ImagesAssets/health.png",
+      mode: "modal",
+      href: "https://cospublic-fsfua6g5f6b6cgbd.eastus2-01.azurewebsites.net/resident_contact/",
+      title: "Property Notifications",
+    },
   },
 };
