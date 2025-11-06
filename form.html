@@ -21,6 +21,8 @@
       href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.js"></script>
+    <script src="./config/site-map.js"></script>
+    <script src="./config/variants.js"></script>
 
     <style>
       .table-wrap {
@@ -246,6 +248,12 @@
 
     <script>
       (function () {
+        const v = (window.resolveVariant && window.resolveVariant()) || "cpc";
+        if (v === "mvb") {
+          window.location.replace("index.html");
+          return;
+        }
+
         const CSV_URL = "CSV/Data.csv";
         const DISPLAY_LIMIT = 100;
 

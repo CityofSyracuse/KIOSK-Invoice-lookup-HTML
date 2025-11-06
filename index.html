@@ -14,6 +14,9 @@
       }
     }
   </script>
+  <script src="./config/site-map.js"></script>
+  <script src="./config/variants.js"></script>
+
 </head>
 <body class="min-h-screen bg-white">
   <header class="bg-brand text-white">
@@ -37,14 +40,14 @@
       </h2>
     </div>
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
-      <button data-action="taxes" class=" bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
+      <button data-tile="taxes" class=" bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/taxes.png" alt="Taxes" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Taxes</h3>
       </button>
 
       <!-- School Zone Traffic Enforcement -->
       <button
-        data-action="school-bus"
+        data-tile="schoolBus"
         class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 gap-2 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg"
       >
         <img src="./ImagesAssets/schoolBus.png" alt="School Zone Violations" class="w-16 h-16 mb-2" />
@@ -52,18 +55,18 @@
       </button>
 
       <!-- Parking Ticket -->
-      <button data-action="parking" class="hidden bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
+      <button data-tile="parking" class="hidden bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/carImage.png" alt="Parking Ticket" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Parking Ticket Lookup</h3>
       </button>
 
       <!-- Health and Sanitation -->
-      <button data-action="health" class="hidden bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
+      <button data-tile="health" class="hidden bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/health.png" alt="Health and Sanitation" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Health and Sanitation Lookup</h3>
       </button>
 
-      <button data-action="dispute" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
+      <button data-tile="dispute" class="bg-white border-2 border-gray-300 rounded-lg aspect-square p-4 flex flex-col items-center justify-center transition duration-300 hover:scale-105 hover:shadow-lg">
         <img src="./ImagesAssets/health.png" alt="Health and Sanitation" class="w-16 h-16 mb-2" />
         <h3 class="text-brand font-semibold text-lg sm:text-xl text-center">Dispute School Zone Ticket</h3>
       </button>
@@ -117,13 +120,6 @@
         <div>
           <h3 class="font-semibold text-gray-800 mb-2">Contact Us</h3>
           <p>City Hall<br>233 East Washington Street<br>Syracuse, NY 13202</p>
-        </div>
-        <div>
-          <h3 class="font-semibold text-gray-800 mb-2">Connect with Us</h3>
-          <ul class="flex flex-wrap gap-x-4 gap-y-2">
-            <li><a href="http://twitter.com/syracuse1848" class="hover:underline">Twitter</a></li>
-            <li><a href="http://youtube.com/cityofsyracuse" class="hover:underline">YouTube</a></li>
-          </ul>
         </div>
       </div>
       <p class="mt-8 text-center text-xs text-gray-500">&copy; <span id="year"></span> City of Syracuse</p>
@@ -208,20 +204,35 @@
       });                                                                     
 
       // Button event handlers
-      document.querySelector('[data-action="taxes"]').addEventListener('click', () => {
-        window.location.href = "form.html";
-      });
-      document.querySelector('[data-action="school-bus"]').addEventListener('click', () => {
-        openModal('https://www.trafficsafetycitations.com/pages/login', 'School Bus Violations');
-      });
+      (function () {
+      const variantId = (window.resolveVariant && window.resolveVariant()) || "cpc";   
+      const VAR = window.VARIANTS?.[variantId] || window.VARIANTS.cpc;                 
+      const MAP = window.SITE_MAP?.tiles || {};                                        
 
-      document.querySelector('[data-action="parking"]').addEventListener('click', () => {
-        openModal('/mvb/tickets/?cmd=search', 'Parking Ticket');
-      });
+      const tiles = document.querySelectorAll('[data-tile]');                          
+      tiles.forEach(el => {
+      const key = el.getAttribute('data-tile');
+      const enabled = VAR.tiles.includes(key);
+      if (!enabled) {
+        el.classList.add('hidden');                   
+      return;
+      }
+      el.classList.remove('hidden');     
+      const pos = VAR.order.indexOf(key);                                            
+      if (pos > -1) el.style.order = String(pos);
 
-      document.querySelector('[data-action="health"]').addEventListener('click', () => {
-        openModal('/mvb/tickets/?cmd=search&show=sov', 'Health and Sanitation');
+      const def = MAP[key];
+      if (!def) return;
+      el.addEventListener('click', () => {                                           
+        if (def.mode === 'route') {
+          window.location.href = def.href;
+        } else {
+          openModal(def.href, def.title);
+        }
       });
+    });
+      document.getElementById('year').textContent = new Date().getFullYear();
+    })();
 
       // BAA in modal 
       const baaBtn = document.querySelector('[data-action="baa"]');               
@@ -231,9 +242,9 @@
         });                                                                         
       }                         
 
-      document.querySelector('[data-action="dispute"]').addEventListener('click', () => {
-        openModal('https://us.openforms.com/Form/f36438c9-85f3-44b3-ab4b-1fa98751ef1f', 'Dispute School Zone Ticket');
-      });
+      // document.querySelector('[data-action="dispute"]').addEventListener('click', () => {
+      //   openModal('https://us.openforms.com/Form/f36438c9-85f3-44b3-ab4b-1fa98751ef1f', 'Dispute School Zone Ticket');
+      // });
 
       document.getElementById('modalClose').addEventListener('click', () => {
         frame.src = 'about:blank';
