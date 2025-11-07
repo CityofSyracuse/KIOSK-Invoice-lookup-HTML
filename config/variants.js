@@ -17,8 +17,8 @@
     },
 
     mvb: {
-      tiles: ["schoolBus", "dispute", "notify"],
-      order: ["schoolBus", "dispute", "parking", "health", "notify"],
+      tiles: ["schoolBus", "notify"],
+      order: ["schoolBus", "parking", "health", "notify"],
     },
     dev: {
       tiles: ["taxes", "schoolBus", "dispute", "parking", "health", "notify"],
