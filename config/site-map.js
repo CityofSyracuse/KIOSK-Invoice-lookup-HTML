@@ -4,7 +4,8 @@ window.SITE_MAP = {
       label: "Taxes",
       icon: "./ImagesAssets/taxes.png",
       mode: "route", // to a page
-      href: "form.html",
+      // href: "form.html",
+      href: "form.html?site=cpc",
     },
     schoolBus: {
       label: "School Zone Traffic Enforcement Lookup",
