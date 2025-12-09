@@ -5,7 +5,7 @@
     const qp = new URLSearchParams(location.search).get("site");
     if (qp) return qp.toLowerCase();
     const host = location.hostname.toLowerCase();
-    // Commenting this out because of cpcviolationlookup domain.  
+    // Commenting this out because of cpcviolationlookup domain is main page now.
     // After we change the domain, we will need to uncomment this.
     // if (host.includes("cpc")) return "cpc";
     if (host.includes("dev")) return "dev";
